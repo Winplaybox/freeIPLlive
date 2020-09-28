@@ -84,10 +84,7 @@ startElem.addEventListener("click", function(evt) {
             });
     
             recorder.startRecording();
-            var blob1 = recorder.getBlob();
             setInterval(function(){
-                document.querySelector('videoplay').src = URL.createObjectURL(blob1);
-            },1000)
             window.stopCallback = function() {
                 window.stopCallback = null;
     
@@ -104,6 +101,7 @@ startElem.addEventListener("click", function(evt) {
                     });
                 });
             };
+            },1000);
     
             // window.timeout = setTimeout(window.stopCallback, 10 * 1000);
         });

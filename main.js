@@ -85,28 +85,25 @@ startElem.addEventListener("click", function(evt) {
     
             recorder.startRecording();
             var blob1 = recorder.getBlob();
-            document.querySelector('video').srcObject = null;
-            document.querySelector('video').src = URL.createObjectURL(blob1);
-            document.querySelector('video').muted = false;
             setInterval(function(){
-            document.querySelector('videoplay').src = URL.createObjectURL(blob1);
+                document.querySelector('videoplay').src = URL.createObjectURL(blob1);
             },1000)
-            // window.stopCallback = function() {
-            //     window.stopCallback = null;
+            window.stopCallback = function() {
+                window.stopCallback = null;
     
-            //     recorder.stopRecording(function() {
-            //         var blob = recorder.getBlob();
-            //         document.querySelector('video').srcObject = null;
-            //         document.querySelector('video').src = URL.createObjectURL(blob);
-            //         document.querySelector('video').muted = false;
+                recorder.stopRecording(function() {
+                    var blob = recorder.getBlob();
+                    document.querySelector('video').srcObject = null;
+                    document.querySelector('video').src = URL.createObjectURL(blob);
+                    document.querySelector('video').muted = false;
                     
-            //         [screen, camera].forEach(function(stream) {
-            //             stream.getTracks().forEach(function(track) {
-            //                 track.stop();
-            //             });
-            //         });
-            //     });
-            // };
+                    [screen, camera].forEach(function(stream) {
+                        stream.getTracks().forEach(function(track) {
+                            track.stop();
+                        });
+                    });
+                });
+            };
     
             // window.timeout = setTimeout(window.stopCallback, 10 * 1000);
         });

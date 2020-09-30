@@ -46,18 +46,6 @@
 <body style="background: #000;">
    
    
-<video id="videoElement"></video>
-<script>
-    if (flvjs.isSupported()) {
-        var videoElement = document.getElementById('videoElement');
-        var flvPlayer = flvjs.createPlayer({
-            type: 'flv',
-            url: 'http://68.183.87.254:8000/live/sagarbmistry1447.flv'
-        });
-        flvPlayer.attachMediaElement(videoElement);
-        flvPlayer.load();
-        flvPlayer.play();
-    }
-</script>
+<video id="videoElement" src="blob:http://68.183.87.254:8000/bc8fea1a-2a2e-4944-a5b6-bd95e33fad33"></video>
 </body>
 </html>

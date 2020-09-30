@@ -1,19 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Preact OBS Plugin</title>
+<html>
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.rawgit.com/jgthms/minireset.css/master/minireset.min.css"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+    <meta charset="UTF-8">
+    <title>Video Player</title>
+    <script src="//bowercdn.net/c/jquery-1.11.1/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@hola.org/jwplayer-hlsjs@latest/dist/jwplayer.hlsjs.min.js"></script>
+	<script src="//ssl.p.jwpcdn.com/player/v/8.0.11/jwplayer.js"></script>
+	<script type="text/javascript">jwplayer.key = "ITWMv7t88JGzI0xPwW8I0+LveiXX9SWbfdmt0ArUSyc=";</script>
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161392485-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    <script type="module" src="main.js"></script>
-  </body>
+  gtag('config', 'UA-161392485-1');
+</script>
+    <meta name="robots" content="noindex,nofollow" />
+    <style>
+        html,
+        body,
+        #container {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            overflow: hidden
+        }
+
+        #container {
+            position: absolute;
+            text-align: center
+        }
+		
+		.jw-flag-user-inactive .jw-controlbar {
+			display:none;
+		}
+
+        video {
+            outline: 0
+        }
+    </style>
+</head>
+
+<body style="background: #000;">
+    <div id="container">
+        <div id="player"></div>
+    </div>
+    <script>
+        $(document).ready(function() {
+			
+			if (Hls.isSupported() && p2pml.hlsjs.Engine.isSupported()) {
+				const config = {
+				  segments:{
+					// number of segments to pass for processing to P2P algorithm
+					forwardSegmentCount:50, // usually should be equal or greater than p2pDownloadMaxPriority and httpDownloadMaxPriority
+				  },
+				  loader:{
+					trackerAnnounce: [
+						"wss://tracker.btorrent.xyz/", "wss://tracker.openwebtorrent.com/", "wss://cdn.zlplayer.net"
+					],
+				  }
+				};
+				var string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+                let OTP = ''; 
+                  
+                // Find the length of string 
+                var len = string.length; 
+                for (let i = 0; i < 3; i++ ) { 
+                    OTP += string[Math.floor(Math.random() * len)]; 
+                }
+					var engine = new p2pml.hlsjs.Engine(config);
+					var player = jwplayer("player");
+					player.setup({
+					"playlist": [{
+						"sources": [{
+							"default": true,
+							"file": "http://gogolive.herokuapp.com/live/sagarbmistry1447/index.m3u8",
+							"type": "hls",
+							"label": "0"
+						}],
+																	}],
+					"primary": "html5",
+					"hlshtml": true,
+					"autostart": false,
+					"width": $(window).width(),
+					"height": $(window).height(),
+					/* other */
+					"aspectratio": "16:9",
+					"cast": {},
+					"controls": true,
+					"displaydescription": false,
+					"displaytitle": false,
+					"mute": false,
+					"ph": 1,
+					"preload": "metadata",
+					"repeat": false,
+					"stagevideo": false,
+					"stretching": "uniform",
+					"playbackRateControls": false,
+					
+					"ga": '{}'
+				});
+					jwplayer_hls_provider.attach();
+					p2pml.hlsjs.initJwPlayer(player, {
+						liveSyncDurationCount: 7, // To have at least 7 segments in queue
+						loader: engine.createLoaderClass()
+					});
+
+
+					/** Ancho de banda */
+				var downloaded_total = 0;
+				var downloaded = 0;
+
+
+				engine.on('piece_bytes_downloaded', function(method, bytes, peerId) {
+					if(peerId){
+						downloaded += bytes;
+					}
+					downloaded_total += bytes;
+				});
+
+				setInterval(function(){ console.log("Ahorro ancho de banda: " + ((downloaded*100)/downloaded_total) + "%"); }, 5000);
+				
+				jwplayer('player').on('play', function() {
+					$('.jw-preview').remove();
+				});
+				
+			} else {
+				var url = "player.php" + $(location).attr('search') + "&oldversion=yes"; 
+				$(location).attr('href',url);
+			}
+
+            $(window).resize(function() {
+                jwplayer().resize($(window).width(), $(window).height());
+            });
+        });
+    </script>
+</body>
 </html>

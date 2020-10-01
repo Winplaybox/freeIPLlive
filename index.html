@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="UTF-8">
-    <title>Video Player</title>
-    <script src="//bowercdn.net/c/jquery-1.11.1/dist/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@hola.org/jwplayer-hlsjs@latest/dist/jwplayer.hlsjs.min.js"></script>
-	<script src="//ssl.p.jwpcdn.com/player/v/8.0.11/jwplayer.js"></script>
-	<script type="text/javascript">jwplayer.key = "ITWMv7t88JGzI0xPwW8I0+LveiXX9SWbfdmt0ArUSyc=";</script>
-	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOGO Live</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161392485-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -21,37 +13,207 @@
   gtag('config', 'UA-161392485-1');
 </script>
     <meta name="robots" content="noindex,nofollow" />
-    <style>
-        html,
-        body,
-        #container {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: #fff;
-            overflow: hidden
-        }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-        #container {
-            position: absolute;
-            text-align: center
-        }
-		
-		.jw-flag-user-inactive .jw-controlbar {
-			display:none;
-		}
+video {
+  width: 100%;
+  height: auto;
+}
 
-        video {
-            outline: 0
-        }
-    </style>
+.row:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+[class*="col-"] {
+  float: left;
+  padding: 15px;
+  width: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+  .col-s-1 {width: 8.33%;}
+  .col-s-2 {width: 16.66%;}
+  .col-s-3 {width: 25%;}
+  .col-s-4 {width: 33.33%;}
+  .col-s-5 {width: 41.66%;}
+  .col-s-6 {width: 50%;}
+  .col-s-7 {width: 58.33%;}
+  .col-s-8 {width: 66.66%;}
+  .col-s-9 {width: 75%;}
+  .col-s-10 {width: 83.33%;}
+  .col-s-11 {width: 91.66%;}
+  .col-s-12 {width: 100%;}
+}
+
+@media only screen and (min-width: 768px) {
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+
+html {
+  font-family: "Lucida Sans", sans-serif;
+}
+body{margin:0;padding:0;}
+
+.header {
+  background-color: #223577;
+  color: #ffffff;
+  padding: 15px;
+}
+
+.header h1{
+    margin: 0;
+    padding: 0;
+    }
+    
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  padding: 8px;
+  margin-bottom: 7px;
+  background-color: #223577;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.menu li:hover {
+  background-color: #0099cc;
+}
+
+.aside {
+  background-color: #223577;
+  padding: 15px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.footer {
+  background-color: #223577;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  padding: 15px;
+}
+
+.copyright a{color:#ffffff}
+.jw-icon-live {
+    color: #ff0000!important;
+    background: #fff!important;
+    height: 16px!important;
+    width: 36px!important;
+}
+.jw-reset {
+    color: inherit;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    float: none;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 1em;
+    line-height: 1em;
+    list-style: none;
+    text-align: left;
+    text-transform: none;
+    vertical-align: baseline;
+    border: 0;
+    direction: ltr;
+    font-variant: inherit;
+    font-stretch: inherit;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: -40px;
+    margin-top: 5px;
+}
+.jw-icon-live .jw-svg-icon-live {
+    width: 44px;
+}
+.jw-svg-icon {
+    height: 24px;
+    width: 24px;
+    fill: currentColor;
+    pointer-events: none;
+}
+.jw-icon-live:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: block;
+    width: 36px;
+    height: 16px;
+    background: #ba1f24;
+    animation: pulse-border 1500ms ease-out infinite;
+    z-index: -1;
+}
+.headertitle{
+position: relative;
+    width: fit-content;
+}
+</style>
+<script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
 </head>
+<body>
 
-<body style="background: #000;">
-   <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
-<video id="videoElement"></video>
+<div class="header">
+  <h1>GOGO LIVE</h1>
+</div>
+
+<div class="row">
+
+  <div class="col-9 col-s-9">
+    
+    <video width="400" id="videoElement">
+      Your browser does not support HTML5 video.
+    </video>
+    <h2 class="headertitle">KXIP vs MI <div class="jw-icon jw-icon-inline jw-button-color jw-reset jw-icon-live" role="button" tabindex="0" aria-label="Live broadcast" style=""><svg xmlns="http://www.w3.org/2000/svg" class="jw-svg-icon jw-svg-icon-live" viewBox="0 0 360 240"><path d="M354.777,40H5.048a5.013,5.013,0,0,0-5,5V194.9a5.013,5.013,0,0,0,5,5h349.73a5.013,5.013,0,0,0,5-5V45A4.95,4.95,0,0,0,354.777,40ZM80.011,139.9a20,20,0,1,1,19.99-20A19.99,19.99,0,0,1,80.011,139.9Zm99.352,10H145.879V88.7h10.795V140h22.689Zm20.99,0H189.158V88.7h11.195Zm40.081,0H227.439L210.847,88.7h11.195l11.994,45.2L246.23,88.7h11.394Zm56.073,0H264.821V88.7h30.085v9.9H275.516v15.6h16.292v9.4H275.516V140h20.89ZM355,40H5.051a5.016,5.016,0,0,0-5,5V195a5.016,5.016,0,0,0,5,5H355a5.016,5.016,0,0,0,5-5V45A4.953,4.953,0,0,0,355,40ZM80.061,139.962a20.013,20.013,0,1,1,20-20.013A20,20,0,0,1,80.061,139.962Zm99.414,10.006h-33.5V88.73h10.8v51.332h22.7Zm21,0h-11.2V88.73h11.2Zm40.106,0h-13l-16.6-61.238h11.2l12,45.228,12.2-45.228h11.4Zm56.108,0h-31.7V88.73h30.1v9.906h-19.4v15.61h16.3v9.406h-16.3v16.41h20.9ZM354.826,40H5a5.016,5.016,0,0,0-5,5V195a5.016,5.016,0,0,0,5,5H354.826a5.016,5.016,0,0,0,5-5V45A4.952,4.952,0,0,0,354.826,40ZM79.983,139.962a20.013,20.013,0,1,1,20-20.013A20,20,0,0,1,79.983,139.962Zm99.379,10.006H145.87V88.73h10.8v51.332h22.7Zm21,0h-11.2V88.73h11.2Zm40.092,0h-13l-16.6-61.238h11.2l12,45.228,12.2-45.228h11.4Zm56.088,0H264.845V88.73h30.094v9.906h-19.4v15.61h16.3v9.406h-16.3v16.41h20.9Z"></path></svg></div></h2>
+  </div>
+
+  <div class="col-3 col-s-12">
+    <div class="aside">
+      <h2>What?</h2>
+      <p>Chania is a city on the island of Crete.</p>
+      <h2>Where?</h2>
+      <p>Crete is a Greek island in the Mediterranean Sea.</p>
+      <h2>How?</h2>
+      <p>You can reach Chania airport from all over Europe.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p class="copyright">
+
+Copyright &copy;<script type="text/javascript">document.write(new Date().getFullYear());</script> All rights reserved <br> Created by <a href="https://winplaybox.in/" target="_blank">winplaybox</a>
+
+</p>
+</div>
 <script>
     if (flvjs.isSupported()) {
         var videoElement = document.getElementById('videoElement');

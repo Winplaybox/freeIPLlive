@@ -4,15 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Video Player</title>
-    <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
+    <script src="//bowercdn.net/c/jquery-1.11.1/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@hola.org/jwplayer-hlsjs@latest/dist/jwplayer.hlsjs.min.js"></script>
+	<script src="//ssl.p.jwpcdn.com/player/v/8.0.11/jwplayer.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script data-ad-client="ca-pub-2629214752896959" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<meta name="theme-color" content="#000000"/>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161392485-1"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145380293-1"></script>
+	  <!--<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>-->
+
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-161392485-1');
+  gtag('config', 'UA-145380293-1');
 </script>
     <meta name="robots" content="noindex,nofollow" />
     <style>
@@ -44,8 +54,130 @@
 </head>
 
 <body style="background: #000;">
-   
-   
-<video id="videoElement" src="blob:http://68.183.87.254:8000/bc8fea1a-2a2e-4944-a5b6-bd95e33fad33"></video>
+    <div id="container">
+        <div id="player"></div>
+    </div>
+    <script>
+        $(document).ready(function() {
+			
+			if (Hls.isSupported() && p2pml.hlsjs.Engine.isSupported()) {
+				const config = {
+				  segments:{
+					// number of segments to pass for processing to P2P algorithm
+					forwardSegmentCount:50, // usually should be equal or greater than p2pDownloadMaxPriority and httpDownloadMaxPriority
+				  },
+				  loader:{
+					trackerAnnounce: [
+						"wss://tracker.btorrent.xyz/", "wss://tracker.openwebtorrent.com/", "wss://cdn.zlplayer.net"
+					],
+					/*// how long to store the downloaded segments for P2P sharing
+					cachedSegmentExpiration:86400000,
+					// count of the downloaded segments to store for P2P sharing
+					cachedSegmentsCount:1000,
+
+					// first 4 segments (priorities 0, 1, 2 and 3) are required buffer for stable playback
+					requiredSegmentsPriority:3,
+
+					// each 1 second each of 10 segments ahead of playhead position gets 6% probability for random HTTP download
+					httpDownloadMaxPriority:20,
+					httpDownloadProbability:0.1,
+					httpDownloadProbabilityInterval: 1000,
+
+					// disallow randomly download segments over HTTP if there are no connected peers
+					httpDownloadProbabilitySkipIfNoPeers: true,
+
+					// P2P will try to download only first 51 segment ahead of playhead position
+					p2pDownloadMaxPriority: 20,
+
+					// X milisecond timeout before retrying HTTP download of a segment in case of an error
+					httpFailedSegmentTimeout:1000,
+
+					// number of simultaneous downloads for P2P and HTTP methods
+					simultaneousP2PDownloads:20,
+					simultaneousHttpDownloads:3,
+
+					// enable mode, that try to prevent HTTP downloads on stream start-up
+					httpDownloadInitialTimeout: 0, // try to prevent HTTP downloads during first X miliseconds
+					httpDownloadInitialTimeoutPerSegment: 4000, // try to prevent HTTP download per segment during first X miliseconds
+
+					// allow to continue aborted P2P downloads via HTTP
+					httpUseRanges: true,*/
+				  }
+				};
+				var string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+                let OTP = ''; 
+                  
+                // Find the length of string 
+                var len = string.length; 
+                for (let i = 0; i < 3; i++ ) { 
+                    OTP += string[Math.floor(Math.random() * len)]; 
+                }
+					var engine = new p2pml.hlsjs.Engine(config);
+					var player = jwplayer("player");
+					player.setup({
+					"playlist": [{
+						"sources": [{
+							"default": true,
+							"file": "http://68.183.87.254:8000/live/sagarbmistry/index.m3u8",
+							"type": "hls",
+							"label": "0"
+						}],
+																	}],
+					"primary": "html5",
+					"hlshtml": true,
+					"autostart": false,
+					"width": $(window).width(),
+					"height": $(window).height(),
+					/* other */
+					"aspectratio": "16:9",
+					"cast": {},
+					"controls": true,
+					"displaydescription": false,
+					"displaytitle": false,
+					"mute": false,
+					"ph": 1,
+					"preload": "metadata",
+					"repeat": false,
+					"stagevideo": false,
+					"stretching": "uniform",
+					"playbackRateControls": false,
+					
+					"ga": '{}'
+				});
+					jwplayer_hls_provider.attach();
+					p2pml.hlsjs.initJwPlayer(player, {
+						liveSyncDurationCount: 7, // To have at least 7 segments in queue
+						loader: engine.createLoaderClass()
+					});
+
+
+					/** Ancho de banda */
+				var downloaded_total = 0;
+				var downloaded = 0;
+
+
+				engine.on('piece_bytes_downloaded', function(method, bytes, peerId) {
+					if(peerId){
+						downloaded += bytes;
+					}
+					downloaded_total += bytes;
+				});
+
+				setInterval(function(){ console.log("Ahorro ancho de banda: " + ((downloaded*100)/downloaded_total) + "%"); }, 5000);
+				
+				jwplayer('player').on('play', function() {
+					$('.jw-preview').remove();
+				});
+				
+			} else {
+				var url = "player.php" + $(location).attr('search') + "&oldversion=yes"; 
+				$(location).attr('href',url);
+			}
+
+            $(window).resize(function() {
+                jwplayer().resize($(window).width(), $(window).height());
+            });
+        });
+    </script>
 </body>
 </html>
